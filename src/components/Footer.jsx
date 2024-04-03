@@ -7,7 +7,7 @@ import { FaLinkedin } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer>
+    <footer id='Footer'>
     <div className="social-icons flex p-4 gap-4 justify-center">
       <a href="https://www.instagram.com/proprinsulextintores/" target="_blank" rel="noopener noreferrer">
         <FaInstagram className='w-6 h-6' />

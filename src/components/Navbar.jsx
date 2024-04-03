@@ -1,11 +1,20 @@
 
+// eslint-disable-next-line no-unused-vars
 import React from "react";
-import {Link} from 'react-router-dom'
-import {BiHomeAlt, BiUser } from 'react-icons/bi';
-import {BsClipboardData,BsBriefcase,BsChatSquare } from 'react-icons/bs';
 import { FaWhatsapp } from "react-icons/fa";
+import { useState } from "react";
 
 export default function Navbar() {
+  const [popupVisible, setPopupVisible] = useState(false);
+
+  const handleOpenPopup = () => {
+    setPopupVisible(true);
+  };
+
+  const handleClosePopup = () => {
+    setPopupVisible(false);
+  }
+
   return (
     <header className=" bg-white md:sticky top-0 z-10">
       <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center scroll-smooth">
@@ -24,10 +33,11 @@ export default function Navbar() {
             
             Clientes
           </a>
-          <a href="#Clients" className="p-2 hover:border-2 hover:p-1 hover:border-solid hover:rounded-lg hover:border-red-700">
+          <a href="#Footer" className="p-2 hover:border-2 hover:p-1 hover:border-solid hover:rounded-lg hover:border-red-700">
             
             Contato
           </a>
+          
         </nav>
         <div className="items-center flex-box justify-end">
         <a href="https://wa.me/555332255270"
@@ -41,31 +51,28 @@ export default function Navbar() {
           Contato: (53) 3225-5270
                   </p>
         </a>
-
-       </div>
+          <div className="flex items-center font-sans mt-2">
+          <button onClick={handleOpenPopup} className="border-none rounded-lg text-white bg-blue-900 py-2 px-6 text-lg 
+          shadow-lg transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110
+           hover:text-black hover:bg-white duration-500">
+              Acesso ao Cliente
+            </button> 
+          </div>     
+          {popupVisible && (
+            <div id="popup" className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center
+             items-center">
+              <div className="bg-white p-8 rounded-lg">
+                <h2 className="text-lg font-bold mb-4">Login</h2>
+                <input type="email" placeholder="Email" className="mb-2 w-full p-2 rounded-lg" />
+                <input type="password" placeholder="Senha" className="mb-4 w-full p-2 rounded-lg" />
+                <button onClick={handleClosePopup} className="bg-blue-900 text-white py-2 px-6 rounded-lg">Fechar</button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );
 }
 
-/*        <nav className="fixed bottom-2 lg:bottom-8 w-full overflow-hidden z-50">
-          <div className="container mx-auto">
-            <div className="w-full bg-white/50 h-[66px] backdrop-blur-2x1 rounded-full max-w-[460px] mx-auto px-5 flex
-            justify-between items-center text-2x1 text-white/50 ">           
-              <Link to='#About' className='cursor-pointer 2-[60px] h-[60px] flex items-center justify-center'>
-                <BiHomeAlt/>
-              </Link>
-              <Link className='cursor-pointer 2-[60px] h-[60px] flex items-center justify-center'>
-                <BsClipboardData/>
-              </Link>
-              <Link className='cursor-pointer 2-[60px] h-[60px] flex items-center justify-center'>
-                <BiUser/>
-              </Link>
-              <Link className='cursor-pointer 2-[60px] h-[60px] flex items-center justify-center'>
-                <BsBriefcase/>
-              </Link>
-            </div>
-          </div>
-        </nav>
-*/
 
