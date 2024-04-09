@@ -3,9 +3,13 @@
 import React from "react";
 import { FaWhatsapp } from "react-icons/fa";
 import { useState } from "react";
+import axios from "axios";
 
 export default function Navbar() {
   const [popupVisible, setPopupVisible] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleOpenPopup = () => {
     setPopupVisible(true);
@@ -14,6 +18,20 @@ export default function Navbar() {
   const handleClosePopup = () => {
     setPopupVisible(false);
   }
+
+  const handleLogin = async () => {
+    try {
+     
+      const response = await axios.get(`http://localhost:3333/dashboard`);
+      
+      
+      console.log(response.data.message); // Exibir mensagem de sucesso
+    } catch (error) {
+      
+      console.error(error.response.data.error); // Exibir mensagem de erro
+      
+    }
+  };
 
   return (
     <header className=" bg-white md:sticky top-0 z-10">
@@ -51,21 +69,20 @@ export default function Navbar() {
           Contato: (53) 3225-5270
                   </p>
         </a>
-          <div className="flex items-center font-sans mt-2">
-          <button onClick={handleOpenPopup} className="border-none rounded-lg text-white bg-blue-900 py-2 px-6 text-lg 
-          shadow-lg transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110
-           hover:text-black hover:bg-white duration-500">
+        <div className="flex items-center font-sans mt-2">
+            <button onClick={handleOpenPopup} className="border-none rounded-lg text-white bg-blue-900 py-2 px-6 text-lg shadow-lg transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:text-black hover:bg-white duration-500">
               Acesso ao Cliente
-            </button> 
-          </div>     
+            </button>
+          </div>
           {popupVisible && (
-            <div id="popup" className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center
-             items-center">
+            <div id="popup" className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
               <div className="bg-white p-8 rounded-lg">
                 <h2 className="text-lg font-bold mb-4">Login</h2>
-                <input type="email" placeholder="Email" className="mb-2 w-full p-2 rounded-lg" />
-                <input type="password" placeholder="Senha" className="mb-4 w-full p-2 rounded-lg" />
-                <button onClick={handleClosePopup} className="bg-blue-900 text-white py-2 px-6 rounded-lg">Fechar</button>
+                <input type="email" placeholder="Email" className="mb-2 w-full p-2 rounded-lg" value={email} onChange={(e) => setEmail(e.target.value)} />
+                <input type="password" placeholder="Senha" className="mb-4 w-full p-2 rounded-lg" value={password} onChange={(e) => setPassword(e.target.value)} />
+                {errorMessage && <p className="text-red-500 mb-2">{errorMessage}</p>}
+                <button onClick={handleLogin} className="bg-blue-900 text-white py-2 px-6 rounded-lg">Login</button>
+                <button onClick={handleClosePopup} className="bg-blue-900 text-white py-2 px-6 rounded-lg ml-2">Fechar</button>
               </div>
             </div>
           )}
