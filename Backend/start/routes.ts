@@ -1,5 +1,7 @@
 import router from '@adonisjs/core/services/router'
 import User from '#models/User'
+import hash from '@adonisjs/core/services/hash'
+import { error } from 'node:console'
 
 const UsersController = () => import('#controllers/users_controller')
 
@@ -15,27 +17,30 @@ router.post('User/:id/tokens', async ({ params }) => {
   }
 })
 
-router.get('dashboard', async ({ request, auth, response }) => {
-  const { email, password } = request.all()
+router.post('login', async ({ request, response }) => {
+  const email = request.input('email')
+  const password = request.input('password')
 
   try {
-    const user = await User.findBy('email', email)
+    // Find user based on email
+    const user = await User.findOrFail(email)
 
-    if (!user) {
-      return response.status(401).send({ error: 'Credenciais inválidas' })
+    // Check if the password is correct
+    if (await hash.verify(user.password, password)) {
+      const token = await User.accessTokens.create(user)
+      return {
+        type: 'bearer',
+        value: token.value!.release(),
+      }
+    } else {
+      console.error('Password mismatch for user:', email)
+      // Log the failed attempt here if necessary, ensure security of logs.
+      return response.unauthorized('Invalid ') // Generic error message
     }
-
-    const passwordValid = await Hash.verify(password, user.password)
-
-    if (!passwordValid) {
-      return response.status(401).send({ error: 'Credenciais inválidas' })
-    }
-
-    const token = await auth.use('api').authenticate()
-
-    return response.status(200).send({ token })
-  } catch (error) {
-    return response.status(500).send({ error: 'Erro interno do servidor' })
+  } catch (e) {
+    // It's good to log the specific error
+    console.error('Authentication error:', e.message)
+    return response.unauthorized('Invalid credentials')
   }
 })
 
