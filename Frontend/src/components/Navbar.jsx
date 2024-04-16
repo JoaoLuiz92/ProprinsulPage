@@ -3,7 +3,7 @@
 import React from "react";
 import { FaWhatsapp } from "react-icons/fa";
 import { useState } from "react";
-import axios from "axios";
+
 
 export default function Navbar() {
   const [popupVisible, setPopupVisible] = useState(false);
@@ -19,19 +19,32 @@ export default function Navbar() {
     setPopupVisible(false);
   }
 
+  const payload = {
+    email: email,
+    password: password,
+  };
+
   const handleLogin = async () => {
     try {
-     
-      const response = await axios.get(`http://localhost:3333/dashboard`);
-      
-      
-      console.log(response.data.message); // Exibir mensagem de sucesso
+      // Assuming `payload` includes method and headers if required
+      const response = await fetch(`http://localhost:3333/login`, {
+        method: 'POST', // Make sure to specify the method
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload) // Ensure payload is properly stringified
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok: ' + response.statusText);
+      }
+  
+      const data = await response.json(); // This parses the JSON response
+  
+      console.log(data.message); // Now `data.message` should be defined, assuming the server sends it
     } catch (error) {
-      
-      console.error(error.response.data.error); // Exibir mensagem de erro
-      
-    }
-  };
+      console.error(error); // Better error handling
+    }  };
 
   return (
     <header className=" bg-white md:sticky top-0 z-10">

@@ -4,6 +4,7 @@ import hash from '@adonisjs/core/services/hash'
 import { error } from 'node:console'
 
 const UsersController = () => import('#controllers/users_controller')
+const SessionController = () => import('#controllers/session_controller')
 
 router.get('/', async () => {})
 
@@ -18,29 +19,28 @@ router.post('User/:id/tokens', async ({ params }) => {
 })
 
 router.post('login', async ({ request, response }) => {
-  const email = request.input('email')
-  const password = request.input('password')
+  const { email, password } = request.only(['email', 'password'])
 
+  // Attempt to find the user by email
+  const user = await User.findBy('email', email)
+  if (!user) {
+    return response.abort('Invalid credentials')
+  }
+
+  // Verify the password
+  const passwordValid = await hash.verify(user.password, password)
+  if (!passwordValid) {
+    return response.abort('Invalid credentials')
+  }
+
+  // Assuming you want to generate a token or perform some other actions after successful authentication
+  // For example, let's assume you're using AdonisJS's built-in authentication to generate a token:
   try {
-    // Find user based on email
-    const user = await User.findOrFail(email)
-
-    // Check if the password is correct
-    if (await hash.verify(user.password, password)) {
-      const token = await User.accessTokens.create(user)
-      return {
-        type: 'bearer',
-        value: token.value!.release(),
-      }
-    } else {
-      console.error('Password mismatch for user:', email)
-      // Log the failed attempt here if necessary, ensure security of logs.
-      return response.unauthorized('Invalid ') // Generic error message
-    }
-  } catch (e) {
-    // It's good to log the specific error
-    console.error('Authentication error:', e.message)
-    return response.unauthorized('Invalid credentials')
+    const token = await auth.use('api').generate(user)
+    return response.json(token)
+  } catch (err) {
+    console.error(err)
+    return response.internalServerError('Something went wrong')
   }
 })
 
