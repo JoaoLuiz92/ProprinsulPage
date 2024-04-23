@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+
 import { useForm, ValidationError } from '@formspree/react';
 
 
@@ -102,14 +102,5 @@ function ContactForm() {
     </div>
 );
 }
-function App() {
-return (
-  <ContactForm />
-);
-
-
-}
-
-
 
 export default ContactForm;

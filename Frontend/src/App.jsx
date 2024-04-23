@@ -3,7 +3,7 @@ import Services from './components/Services';
 import About from './components/About';
 import Contact from './components/Contact';
 import Clients from './components/Clients';
-import Email from './components/email';
+import FormFooter from './components/FormFooter';
 import Footer from './components/Footer';
 
 
@@ -27,7 +27,7 @@ function App() {
           <Contact/>
         </div>
         <div>
-          <Email/>
+          <FormFooter/>
         </div>
         <div>
           <Footer/>

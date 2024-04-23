@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest  # Corrigido de "latet" para "latest"
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-volume:/data/db  # Corrigido para formatar o caminho corretamente
+    restart: always
+
+  pronprback:
+    container_name: pronprback
+    build: ./Backend
+    restart: always
+    ports:
+      - "3333:3333"
+    depends_on:
+      - mysql
+
+  pronprfront:
+    container_name: pronprfront
+    build: ./Frontend
+    depends_on:
+      - pronprback
+    volumes:
+      - front-volume:/var/www/html
+
+  nginx:
+    container_name: nginx-pronpr  # Corrigido o nome de "nginix-pronpr" para "nginx-pronpr"
+    build: ./nginx
+    volumes:
+      - front-volume:/var/www/html
+    ports:
+      - "80:80"
+    depends_on:
+      - mysql
+      - pronprback
+      - pronprfront
+
+volumes:
+  mysql-volume:
+  front-volume:
