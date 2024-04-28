@@ -9,7 +9,7 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "start": "vite"
-    },
+  },
   "dependencies": {
     "@formspree/react": "^2.5.1",
     "@heroicons/react": "^1.0.6",
@@ -20,7 +20,7 @@
     "react-animations": "^1.0.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.0.1",
-    "react-router-dom": "^6.21.3"
+    "react-router-dom": "^6.23.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",
