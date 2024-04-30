@@ -1,6 +1,41 @@
-//import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-//import Dashboard from './components/Dashboard'; // Importe seu componente Dashboard
-//import ProtectedRoute from './components/ProtectedRoute'; // Importe seu componente de rota protegida
+
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Dashboard from './components/Dashboard';
+import ProtectedRoute from './components/ProtectedRoute';
+import HomePage from './components/homePage';
+
+function App() {
+  return (
+    <Router>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/dashboard" element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        } />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
+
+
+
+
+
+
+
+
+
+
+
+/*import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Dashboard from './components/Dashboard'; // Importe seu componente Dashboard
+import ProtectedRoute from './components/ProtectedRoute'; // Importe seu componente de rota protegida
 import Nav from './components/Navbar';
 import Services from './components/Services';
 import About from './components/About';
@@ -10,11 +45,11 @@ import FormFooter from './components/FormFooter';
 import Footer from './components/Footer';
 
 
-/*
+
 function App() {
   return (
     <Router>
-      <Nav/>
+        <Nav/>
       <Routes>
         <Route path="/" element={
           <main>
@@ -26,19 +61,19 @@ function App() {
             <Footer />
           </main>
         } />
-        <Route path="/login" element={<Nav />} />
-        <Route path="/dashboard" element={
+         <Route path="/dashboard" element={
           <ProtectedRoute>
             <Dashboard />
           </ProtectedRoute>
         } />
+     
       </Routes>
       </Router>
     );
   }
   
   export default App;
-  */
+  
 
 
 
@@ -69,5 +104,5 @@ function App() {
    </main>
   )
 }
-
 export default App
+*/

@@ -1,6 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import User from '#models/User'
-import Hash from '@ioc:Adonis/Core/Hash'
+import Hash from '@adonisjs/core/services/hash'
 
 export default class AuthController {
   async login({ request, auth, response }: HttpContext) {
@@ -15,7 +15,7 @@ export default class AuthController {
       }
 
       // Gere um token JWT ou sessão, conforme configurado.
-      const token = await auth.use('api').generate(user)
+      const token = await auth.use('api')
 
       return response.ok({ message: 'Logged in successfully', token })
     } catch (error) {

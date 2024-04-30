@@ -3,6 +3,7 @@
 import React from "react";
 import { FaWhatsapp } from "react-icons/fa";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 export default function Navbar() {
@@ -10,10 +11,13 @@ export default function Navbar() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
+  const navigate = useNavigate();
+  
   const handleOpenPopup = () => {
     setPopupVisible(true);
-  };
+    setErrorMessage("")
+   };
+
 
   const handleClosePopup = () => {
     setPopupVisible(false);
@@ -26,27 +30,28 @@ export default function Navbar() {
 
   const handleLogin = async () => {
     try {
-      // Assuming `payload` includes method and headers if required
+    
       const response = await fetch(`http://localhost:3333/login`, {
-        method: 'POST', // Make sure to specify the method
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(payload) // Ensure payload is properly stringified
+        body: JSON.stringify(payload) 
       });
   
       if (!response.ok) {
         throw new Error('Network response was not ok: ' + response.statusText);
       }
   
-      const data = await response.json(); // This parses the JSON response
-  
-      console.log(data.message); // Now `data.message` should be defined, assuming the server sends it
+      const data = await response.json(); 
+      localStorage.setItem('token', data.token); 
+      handleClosePopup(); 
+      navigate('/dashboard');
     } catch (error) {
-      console.error(error); // Better error handling
-    }  };
-
-  return (
+      console.error(error);
+      setErrorMessage(error.message); 
+    }
+  };  return (
     <header className=" bg-white md:sticky top-0 z-10">
       <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center scroll-smooth">
       <a href="#" className="flex items-center space-x-3 rtl:space-x-reverse">

@@ -1,5 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import User from '#models/User'
+import hash from '@adonisjs/core/services/hash'
 
 export default class UsersController {
   /**
@@ -17,16 +18,18 @@ export default class UsersController {
       email: body.email,
       password: body.password,
     })
+    const passHash = await hash.make(body.password)
+    user.password = passHash
 
     return user
   }
-  
+
   async show({ request }: HttpContext) {
     const userId = request.param('id')
     const user = await User.findOrFail(userId)
     return user
   }
-  
+
   async update({ request }: HttpContext) {
     const userId = request.param('id')
     const body = request.only(['full_name', 'email', 'password'])
@@ -34,7 +37,7 @@ export default class UsersController {
     await user.merge(body).save()
     return user
   }
-  
+
   async destroy({ request }: HttpContext) {
     const userId = request.param('id')
     const user = await User.findOrFail(userId)
