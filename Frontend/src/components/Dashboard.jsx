@@ -9,11 +9,13 @@ function Dashboard() {
     const fetchData = async () => {
       const token = localStorage.getItem('token'); // Pegue o token salvo
       try {
-        const response = await fetch('http://localhost:3333/user-data', {
+        const response = await fetch('http://localhost:3333/company', {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${token}`, // Use o token para autorização
+            'Authorization': `Bearer ${token}`, 
+            'Content-Type': 'application/json',
           },
+       
         });
 
         if (!response.ok) {
@@ -37,7 +39,9 @@ function Dashboard() {
   return (
     <div>
       <h1>Dashboard</h1>
-      <p>Bem-vindo, {userData.name}!</p>
+      <p>Bem-vindo, 
+        {JSON.stringify(userData)}
+        !</p>
       {/* Outras informações do usuário podem ser exibidas aqui */}
     </div>
   );

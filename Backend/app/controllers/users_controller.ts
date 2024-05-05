@@ -12,11 +12,12 @@ export default class UsersController {
   }
 
   async store({ request }: HttpContext) {
-    const body = request.only(['full_name', 'email', 'password'])
+    const body = request.only(['email', 'password', 'profile', 'company_id'])
     const user = await User.create({
-      full_name: body.full_name,
       email: body.email,
       password: body.password,
+      profile: body.profile,
+      company_id: body.company_id,
     })
     const passHash = await hash.make(body.password)
     user.password = passHash
@@ -24,15 +25,21 @@ export default class UsersController {
     return user
   }
 
-  async show({ request }: HttpContext) {
-    const userId = request.param('id')
-    const user = await User.findOrFail(userId)
-    return user
+  async show({ response, params }: HttpContext) {
+    try {
+      const user = await User.query()
+        .where('id', params.id) // ou algum outro critério de identificação
+        .firstOrFail()
+
+      return response.json(user)
+    } catch (error) {
+      return response.status(404).json({ message: 'User not found', error })
+    }
   }
 
   async update({ request }: HttpContext) {
     const userId = request.param('id')
-    const body = request.only(['full_name', 'email', 'password'])
+    const body = request.only(['email', 'password', 'profile'])
     const user = await User.findOrFail(userId)
     await user.merge(body).save()
     return user

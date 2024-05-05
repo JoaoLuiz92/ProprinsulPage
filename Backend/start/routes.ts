@@ -1,6 +1,7 @@
 import router from '@adonisjs/core/services/router'
 import User from '#models/User'
 import hash from '@adonisjs/core/services/hash'
+const CompaniesController = () => import('#controllers/companies_controller')
 
 const UsersController = () => import('#controllers/users_controller')
 
@@ -18,7 +19,7 @@ router.post('User/:id/tokens', async ({ params }) => {
 
 router.post('login', async ({ request, response }) => {
   const { email, password } = request.only(['email', 'password'])
-  
+
   const user = await User.findBy('email', email)
   if (!user) {
     return response.abort('Invalid')
@@ -28,11 +29,11 @@ router.post('login', async ({ request, response }) => {
 
   if (passwordValid) {
     const token = await User.accessTokens.create(user)
-    const data = await response.json
+    const data = response.json
     console.log(data)
     // return response.json({
     return response.json({
-     type: 'bearer',
+      type: 'bearer',
       value: token.value!.release(),
     })
   } else {
@@ -41,3 +42,4 @@ router.post('login', async ({ request, response }) => {
 })
 
 router.resource('User', UsersController)
+router.resource('company', CompaniesController)
